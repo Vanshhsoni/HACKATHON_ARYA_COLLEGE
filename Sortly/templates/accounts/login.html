@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sortly - Login</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+        
+        :root {
+            --primary: #3a86ff;
+            --secondary: #8338ec;
+            --text: #2b2d42;
+            --light-text: #8d99ae;
+            --background: #f8f9fa;
+            --card: #ffffff;
+            --shadow: rgba(149, 157, 165, 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--background);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+        }
+        
+        .login-container {
+            max-width: 400px;
+            width: 90%;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .login-card {
+            background: var(--card);
+            border-radius: 16px;
+            padding: 2.5rem;
+            box-shadow: 0 20px 60px var(--shadow);
+            position: relative;
+            overflow: hidden;
+            transform: translateY(0);
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        
+        .login-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 30px 70px var(--shadow);
+        }
+        
+        .login-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .login-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: fadeIn 0.8s ease forwards, slideDown 0.8s ease forwards;
+            opacity: 0;
+        }
+        
+        .login-subtitle {
+            color: var(--light-text);
+            font-size: 0.9rem;
+            animation: fadeIn 0.8s ease 0.2s forwards;
+            opacity: 0;
+        }
+        
+        .form-group {
+            position: relative;
+            margin-bottom: 1.5rem;
+            animation: fadeIn 0.8s ease 0.3s forwards, slideUp 0.8s ease 0.3s forwards;
+            opacity: 0;
+        }
+        
+        .form-group:nth-child(2) {
+            animation-delay: 0.4s;
+        }
+        
+        .form-control {
+            width: 100%;
+            background: #f5f7fa;
+            border: 1px solid transparent;
+            border-radius: 12px;
+            padding: 1rem 1rem 1rem 3rem;
+            font-size: 0.95rem;
+            font-family: 'Poppins', sans-serif;
+            color: var(--text);
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: rgba(58, 134, 255, 0.3);
+            box-shadow: 0 0 0 4px rgba(58, 134, 255, 0.1);
+            background: #ffffff;
+        }
+        
+        .form-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--light-text);
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus + .form-icon {
+            color: var(--primary);
+        }
+        
+        .form-label {
+            position: absolute;
+            left: 3rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--light-text);
+            font-size: 0.95rem;
+            pointer-events: none;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus ~ .form-label,
+        .form-control:not(:placeholder-shown) ~ .form-label {
+            top: 0.5rem;
+            left: 1rem;
+            font-size: 0.75rem;
+            color: var(--primary);
+            background: #ffffff;
+            padding: 0 0.5rem;
+            border-radius: 4px;
+        }
+        
+        .form-control::placeholder {
+            color: transparent;
+        }
+        
+        .btn-login {
+            width: 100%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 1rem;
+            font-weight: 500;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(58, 134, 255, 0.3);
+            animation: fadeIn 0.8s ease 0.5s forwards, slideUp 0.8s ease 0.5s forwards;
+            opacity: 0;
+        }
+        
+        .btn-login:hover {
+            box-shadow: 0 8px 25px rgba(58, 134, 255, 0.4);
+            transform: translateY(-3px);
+        }
+        
+        .login-footer {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: var(--light-text);
+            font-size: 0.9rem;
+            animation: fadeIn 0.8s ease 0.6s forwards;
+            opacity: 0;
+        }
+        
+        .login-footer a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .login-footer a:hover {
+            color: var(--secondary);
+        }
+        
+        .messages {
+            margin-bottom: 1.5rem;
+        }
+        
+        .message {
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+        
+        .success {
+            background-color: rgba(72, 187, 120, 0.1);
+            color: #38a169;
+        }
+        
+        .error {
+            background-color: rgba(245, 101, 101, 0.1);
+            color: #e53e3e;
+        }
+        
+        /* Animated background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            overflow: hidden;
+        }
+        
+        .bg-gradient {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(58, 134, 255, 0.1), rgba(131, 56, 236, 0.1));
+            opacity: 0.7;
+        }
+        
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            filter: blur(10px);
+            opacity: 0.3;
+            animation: float 20s infinite alternate;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideDown {
+            from { transform: translateY(-20px); }
+            to { transform: translateY(0); }
+        }
+        
+        @keyframes slideUp {
+            from { transform: translateY(20px); }
+            to { transform: translateY(0); }
+        }
+        
+        @keyframes float {
+            0% { transform: translate(0, 0); }
+            50% { transform: translate(30px, 30px); }
+            100% { transform: translate(-30px, 15px); }
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.05); opacity: 0.5; }
+            100% { transform: scale(1); opacity: 0.8; }
+        }
+        
+        .login-progress {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 3px;
+            width: 100%;
+            background: transparent;
+            overflow: hidden;
+            visibility: hidden;
+        }
+        
+        .login-progress-bar {
+            height: 100%;
+            width: 0;
+            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--primary));
+            transition: width 1s ease;
+        }
+        
+        .login-success {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--card);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transform: translateY(100%);
+            transition: transform 0.5s ease;
+            z-index: 100;
+        }
+        
+        .success-icon {
+            font-size: 3rem;
+            color: #48bb78;
+            margin-bottom: 1rem;
+        }
+        
+        .success-text {
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: var(--text);
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animation">
+        <div class="bg-gradient"></div>
+    </div>
+    
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <h1 class="login-title">Welcome Back</h1>
+                <p class="login-subtitle">Sign in to access your inventory</p>
+            </div>
+            
+            {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                <div class="message {{ message.tags }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            
+            <form id="login-form" method="post" action="{% url 'accounts:login' %}">
+                {% csrf_token %}
+                
+                <div class="form-group">
+                    <input type="text" id="username" name="username" class="form-control" placeholder="Username" required>
+                    <i class="fas fa-user form-icon"></i>
+                    <label for="username" class="form-label">Username</label>
+                </div>
+                
+                <div class="form-group">
+                    <input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
+                    <i class="fas fa-lock form-icon"></i>
+                    <label for="password" class="form-label">Password</label>
+                </div>
+                
+                <button type="submit" class="btn-login">
+                    Sign In
+                </button>
+                
+                <div class="login-footer">
+                    <p>Don't have an account? <a href="{% url 'accounts:signup' %}">Create Account</a></p>
+                </div>
+            </form>
+            
+            
+            <div class="login-progress">
+                <div class="login-progress-bar"></div>
+            </div>
+            
+            <div class="login-success">
+                <i class="fas fa-check-circle success-icon"></i>
+                <p class="success-text">Login Successful!</p>
+            </div>
+        </div>
+    </div>
+
+    
+    
+</body>
+</html>

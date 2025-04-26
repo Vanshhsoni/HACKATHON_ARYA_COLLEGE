@@ -3,292 +3,325 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome Page</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <title>Sortly - Inventory Management</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600&display=swap');
-
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+        
+        :root {
+            --primary: #3a86ff;
+            --secondary: #8338ec;
+            --text: #2b2d42;
+            --light-text: #8d99ae;
+            --background: #f8f9fa;
+            --card: #ffffff;
+            --shadow: rgba(149, 157, 165, 0.1);
+        }
+        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
+        
         body {
-            background-color: #f0f7ff;
-            height: 100vh;
+            font-family: 'Poppins', sans-serif;
+            background: var(--background);
+            color: var(--text);
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-family: 'Montserrat', sans-serif;
-            overflow: hidden;
+            overflow-x: hidden;
         }
-
+        
         .container {
+            max-width: 1200px;
             width: 90%;
-            max-width: 1100px;
-            text-align: center;
             padding: 2rem;
-            animation: fadeIn 1s ease;
+            position: relative;
+            z-index: 10;
         }
-
-        .logo {
-            margin-bottom: 2.5rem;
-            animation: slideDown 0.8s ease;
-        }
-
-        .logo-img {
-            width: 100px;
-            height: 100px;
-            background: linear-gradient(135deg, #3c7dff, #2453b3);
-            border-radius: 50%;
-            margin: 0 auto;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: white;
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 2.5rem;
-            font-weight: bold;
-            box-shadow: 0 10px 25px rgba(60, 125, 255, 0.25);
-        }
-
-        .welcome-text {
-            margin-bottom: 4rem;
-            animation: fadeIn 1s 0.3s both;
-        }
-
-        h1 {
-            color: #2453b3;
-            font-family: 'Cormorant Garamond', serif;
-            font-weight: 600;
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            letter-spacing: 1px;
-        }
-
-        .subtitle {
-            color: #4a5568;
-            font-size: 1.2rem;
-            max-width: 600px;
-            margin: 0 auto;
-            line-height: 1.6;
-        }
-
-        .buttons {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            margin-bottom: 3rem;
-        }
-
-        .btn {
-            padding: 1rem 2.5rem;
-            border-radius: 6px;
-            font-size: 1rem;
-            font-weight: 500;
-            letter-spacing: 0.5px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-family: 'Montserrat', sans-serif;
+        
+        .welcome-card {
+            background: var(--card);
+            border-radius: 16px;
+            padding: 3rem;
+            box-shadow: 0 20px 60px var(--shadow);
+            text-align: center;
             position: relative;
             overflow: hidden;
-            z-index: 1;
+            transform: translateY(0);
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
-
+        
+        .welcome-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 30px 70px var(--shadow);
+        }
+        
+        .welcome-title {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: fadeIn 0.8s ease forwards, slideDown 0.8s ease forwards;
+            opacity: 0;
+        }
+        
+        .welcome-subtitle {
+            color: var(--light-text);
+            font-size: 1.1rem;
+            margin-bottom: 3rem;
+            line-height: 1.6;
+            animation: fadeIn 0.8s ease 0.2s forwards, slideDown 0.8s ease 0.2s forwards;
+            opacity: 0;
+        }
+        
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+            opacity: 0;
+            animation: fadeIn 0.8s ease 0.4s forwards, slideUp 0.8s ease 0.4s forwards;
+        }
+        
+        .btn {
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-weight: 500;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        
         .btn-primary {
-            background: linear-gradient(135deg, #3c7dff, #2453b3);
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
             border: none;
-            box-shadow: 0 4px 12px rgba(60, 125, 255, 0.25);
-            animation: slideUp 0.8s 0.5s both;
+            box-shadow: 0 5px 15px rgba(58, 134, 255, 0.3);
         }
-
+        
+        .btn-primary:hover {
+            box-shadow: 0 8px 25px rgba(58, 134, 255, 0.4);
+            transform: translateY(-3px);
+        }
+        
         .btn-secondary {
             background: transparent;
-            color: #3c7dff;
-            border: 2px solid #3c7dff;
-            animation: slideUp 0.8s 0.7s both;
+            color: var(--primary);
+            border: 2px solid rgba(58, 134, 255, 0.3);
         }
-
-        .btn:before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.1);
-            transition: all 0.4s ease;
-            z-index: -1;
-        }
-
-        .btn:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(60, 125, 255, 0.2);
-        }
-
-        .btn:hover:before {
-            left: 0;
-        }
-
+        
         .btn-secondary:hover {
-            background-color: rgba(60, 125, 255, 0.05);
+            background: rgba(58, 134, 255, 0.05);
+            transform: translateY(-3px);
         }
-
-        .floating-shapes {
-            position: absolute;
-            width: 100%;
-            height: 100%;
+        
+        .btn-icon {
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+        
+        .btn:hover .btn-icon {
+            transform: translateX(5px);
+        }
+        
+        .messages {
+            margin-bottom: 2rem;
+        }
+        
+        .message {
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+        
+        .success {
+            background-color: rgba(72, 187, 120, 0.1);
+            color: #38a169;
+        }
+        
+        .error {
+            background-color: rgba(245, 101, 101, 0.1);
+            color: #e53e3e;
+        }
+        
+        .footer {
+            margin-top: 2rem;
+            color: var(--light-text);
+            font-size: 0.9rem;
+            opacity: 0;
+            animation: fadeIn 0.8s ease 0.6s forwards;
+        }
+        
+        /* Animated background */
+        .bg-animation {
+            position: fixed;
             top: 0;
             left: 0;
-            z-index: -1;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
             overflow: hidden;
         }
-
-        .shape {
+        
+        .bg-gradient {
             position: absolute;
-            background: linear-gradient(135deg, rgba(60, 125, 255, 0.05), rgba(36, 83, 179, 0.05));
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(58, 134, 255, 0.1), rgba(131, 56, 236, 0.1));
+            opacity: 0.7;
+        }
+        
+        .particle {
+            position: absolute;
             border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            filter: blur(10px);
+            opacity: 0.3;
+            animation: float 20s infinite alternate;
         }
-
-        .shape-1 {
-            width: 300px;
-            height: 300px;
-            top: -150px;
-            right: 10%;
-            animation: float 20s infinite ease-in-out;
-        }
-
-        .shape-2 {
-            width: 200px;
-            height: 200px;
-            bottom: -100px;
-            left: 15%;
-            animation: float 15s infinite ease-in-out reverse;
-        }
-
-        .shape-3 {
-            width: 150px;
-            height: 150px;
-            top: 20%;
-            left: 5%;
-            animation: float 17s infinite ease-in-out;
-        }
-
-        .shape-4 {
-            width: 80px;
-            height: 80px;
-            bottom: 10%;
-            right: 20%;
-            animation: float 12s infinite ease-in-out reverse;
-        }
-
-        @keyframes float {
-            0% { transform: translate(0, 0) rotate(0deg); }
-            50% { transform: translate(30px, 20px) rotate(5deg); }
-            100% { transform: translate(0, 0) rotate(0deg); }
-        }
-
+        
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
         }
-
+        
         @keyframes slideDown {
-            from { opacity: 0; transform: translateY(-30px); }
-            to { opacity: 1; transform: translateY(0); }
+            from { transform: translateY(-20px); }
+            to { transform: translateY(0); }
         }
-
+        
         @keyframes slideUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
+            from { transform: translateY(20px); }
+            to { transform: translateY(0); }
         }
-
-        .footer {
-            margin-top: 4rem;
-            color: #718096;
-            font-size: 0.9rem;
-            animation: fadeIn 1s 0.9s both;
+        
+        @keyframes float {
+            0% { transform: translate(0, 0); }
+            50% { transform: translate(30px, 30px); }
+            100% { transform: translate(-30px, 15px); }
         }
-
+        
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.05); opacity: 0.5; }
+            100% { transform: scale(1); opacity: 0.8; }
+        }
+        
         @media (max-width: 768px) {
-            .buttons {
+            .welcome-card {
+                padding: 2rem;
+            }
+            
+            .welcome-title {
+                font-size: 2rem;
+            }
+            
+            .btn-container {
                 flex-direction: column;
                 gap: 1rem;
-                width: 80%;
-                margin: 0 auto 2rem auto;
             }
-
-            h1 {
-                font-size: 2.5rem;
-            }
-
-            .subtitle {
-                font-size: 1rem;
-            }
-
-            .logo-img {
-                width: 80px;
-                height: 80px;
-                font-size: 2rem;
+            
+            .btn {
+                width: 100%;
             }
         }
     </style>
 </head>
 <body>
-    <div class="floating-shapes">
-        <div class="shape shape-1"></div>
-        <div class="shape shape-2"></div>
-        <div class="shape shape-3"></div>
-        <div class="shape shape-4"></div>
+    <div class="bg-animation">
+        <div class="bg-gradient"></div>
     </div>
-
+    
     <div class="container">
-        <div class="logo">
-            <div class="logo-img">U</div>
-        </div>
-        
-        <div class="welcome-text">
-            <h1>Welcome</h1>
-            <p class="subtitle">Welcome to your Personalized Inventory Management System</p>
-        </div>
-        
-        <div class="buttons">
-            <button class="btn btn-primary" onclick="window.location.href='login.html'">
-                Sign In
-            </button>
-            <button class="btn btn-secondary" onclick="window.location.href='register.html'">
-                Create Account
-            </button>
-        </div>
-        
-        <div class="footer">
-            &copy; 2025 All rights reserved.
+        <div class="welcome-card">
+            <h1 class="welcome-title">Welcome to Sortly</h1>
+            <p class="welcome-subtitle">Your personal inventory management system - simplified, organized, and efficient.</p>
+            
+            {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                <div class="message {{ message.tags }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            
+            <div class="btn-container">
+                <button class="btn btn-primary" onclick="window.location.href='{% url 'accounts:login' %}'">
+                    Sign In <i class="fas fa-arrow-right btn-icon"></i>
+                </button>
+                <button class="btn btn-secondary" onclick="window.location.href='{% url 'accounts:signup' %}'">
+                    Create Account
+                </button>
+            </div>
+            
+            <div class="footer">
+                &copy; 2025 Sortly. All rights reserved.
+            </div>
         </div>
     </div>
 
     <script>
-        // Add slight parallax effect on mouse movement
+        // Create animated background particles
+        const bgAnimation = document.querySelector('.bg-animation');
+        
+        function createParticles() {
+            for (let i = 0; i < 15; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                // Random size
+                const size = Math.random() * 120 + 50;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                
+                // Random position
+                const posX = Math.random() * 100;
+                const posY = Math.random() * 100;
+                particle.style.left = `${posX}%`;
+                particle.style.top = `${posY}%`;
+                
+                // Random animation duration and delay
+                const duration = Math.random() * 20 + 15;
+                const delay = Math.random() * 10;
+                particle.style.animationDuration = `${duration}s`;
+                particle.style.animationDelay = `${delay}s`;
+                
+                // Add pulse animation
+                particle.style.animation = `float ${duration}s infinite alternate ease-in-out ${delay}s, pulse ${Math.random() * 5 + 5}s infinite ease-in-out ${Math.random() * 3}s`;
+                
+                bgAnimation.appendChild(particle);
+            }
+        }
+        
+        createParticles();
+        
+        // Parallax effect
         document.addEventListener('mousemove', (e) => {
-            const shapes = document.querySelectorAll('.shape');
+            const particles = document.querySelectorAll('.particle');
             const x = e.clientX / window.innerWidth;
             const y = e.clientY / window.innerHeight;
             
-            shapes.forEach(shape => {
-                const speed = parseFloat(shape.getAttribute('data-speed') || 0.05);
-                const moveX = (x - 0.5) * speed * 50;
-                const moveY = (y - 0.5) * speed * 50;
+            particles.forEach((particle, index) => {
+                const speed = (index % 5 + 1) * 0.01;
+                const moveX = (x - 0.5) * speed * 100;
+                const moveY = (y - 0.5) * speed * 100;
                 
-                shape.style.transform = `translate(${moveX}px, ${moveY}px)`;
+                particle.style.transform = `translate(${moveX}px, ${moveY}px)`;
             });
         });
-
-        // Initialize speed attributes for shapes
-        document.querySelector('.shape-1').setAttribute('data-speed', '0.05');
-        document.querySelector('.shape-2').setAttribute('data-speed', '0.04');
-        document.querySelector('.shape-3').setAttribute('data-speed', '0.06');
-        document.querySelector('.shape-4').setAttribute('data-speed', '0.03');
     </script>
 </body>
 </html>
