@@ -11,5 +11,61 @@
     <title>HOME</title>
 
 </head>
-X
+{% extends 'base.html' %}
+{% block content %}
+<div class="container py-4">
+    <h1 class="mb-4">Inventory Dashboard</h1>
+    
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        <!-- Add Store Card -->
+        <div class="col">
+            <div class="card h-100 add-card" data-bs-toggle="modal" data-bs-target="#addStoreModal">
+                <div class="card-body d-flex align-items-center justify-content-center">
+                    <div class="text-center">
+                        <i class="bi bi-plus-circle" style="font-size: 3rem;"></i>
+                        <h5 class="mt-3">Add New Store</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Existing Stores -->
+        {% for store in stores %}
+        <div class="col">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">{{ store.name }}</h5>
+                    <p class="card-text text-muted">Created: {{ store.created_at|date:"M d, Y" }}</p>
+                </div>
+                <div class="card-footer">
+                    <a href="{% url 'inventory:store_detail' store.id %}" class="btn btn-primary">View Products</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Add Store Modal -->
+<div class="modal fade" id="addStoreModal" tabindex="-1" aria-labelledby="addStoreModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addStoreModalLabel">Add New Store</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="post" action="{% url 'inventory:create_store' %}">
+                <div class="modal-body">
+                    {% csrf_token %}
+                    {{ store_form.as_p }}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Create Store</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
 </html>
