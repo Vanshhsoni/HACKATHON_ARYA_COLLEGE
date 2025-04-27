@@ -15,14 +15,18 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #3e64ff;
-            --secondary-color: #5edfff;
-            --background-color: #f8fafc;
+            --primary-color: #4F46E5;
+            --primary-hover: #4338CA;
+            --secondary-color: #818CF8;
+            --background-color: #F9FAFB;
             --card-color: #ffffff;
-            --text-color: #333333;
-            --text-muted: #6c757d;
-            --danger-color: #ff4757;
-            --success-color: #2ed573;
+            --text-color: #1F2937;
+            --text-muted: #6B7280;
+            --danger-color: #EF4444;
+            --success-color: #10B981;
+            --sidebar-width: 220px;
+            --border-radius: 12px;
+            --transition-speed: 0.3s;
         }
 
         body {
@@ -30,69 +34,286 @@
             background-color: var(--background-color);
             color: var(--text-color);
             transition: all 0.3s ease;
+            min-height: 100vh;
+            display: flex;
         }
 
-        .navbar {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            padding: 0.8rem 0;
+        /* Sidebar styles */
+        .sidebar {
+            width: var(--sidebar-width);
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            background-color: white;
+            color: var(--text-color);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+            z-index: 1030;
+            transition: all var(--transition-speed) ease;
+            overflow-y: auto;
         }
 
-        .navbar-brand {
+        .sidebar-header {
+            padding: 1.5rem 1rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .sidebar-header .logo {
             font-weight: 600;
+            font-size: 1.25rem;
             letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            color: var(--primary-color);
+            text-decoration: none;
         }
 
-        .nav-link {
+        .sidebar-nav {
+            padding: 1rem 0;
+        }
+
+        .sidebar-nav .nav-link {
+            padding: 0.75rem 1rem;
+            color: var(--text-color);
+            border-radius: var(--border-radius);
+            margin: 0.25rem 0.75rem;
+            display: flex;
+            align-items: center;
+            transition: all var(--transition-speed) ease;
+        }
+
+        .sidebar-nav .nav-link:hover {
+            background-color: rgba(79, 70, 229, 0.1);
+            color: var(--primary-color);
+            transform: translateX(5px);
+        }
+
+        .sidebar-nav .nav-link.active {
+            background-color: rgba(79, 70, 229, 0.15);
+            color: var(--primary-color);
             font-weight: 500;
-            transition: all 0.3s ease;
         }
 
-        .nav-link:hover {
-            transform: translateY(-2px);
+        .sidebar-nav .nav-link i {
+            margin-right: 0.75rem;
+            font-size: 1.1rem;
         }
 
+        /* Content area */
+        .content-wrapper {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            width: calc(100% - var(--sidebar-width));
+            transition: all var(--transition-speed) ease;
+        }
+
+        /* When sidebar is collapsed */
+        body.sidebar-collapsed .sidebar {
+            width: 60px;
+        }
+
+        body.sidebar-collapsed .content-wrapper {
+            margin-left: 60px;
+            width: calc(100% - 60px);
+        }
+
+        body.sidebar-collapsed .sidebar .logo-text,
+        body.sidebar-collapsed .sidebar .nav-link-text {
+            display: none;
+        }
+
+        body.sidebar-collapsed .sidebar .nav-link {
+            justify-content: center;
+            padding: 0.75rem;
+        }
+
+        body.sidebar-collapsed .sidebar .nav-link i {
+            margin-right: 0;
+        }
+
+        /* Toggle button */
+        .sidebar-toggle {
+            position: fixed;
+            bottom: 20px;
+            left: var(--sidebar-width);
+            transform: translateX(-50%);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 1031;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+            transition: all var(--transition-speed) ease;
+        }
+
+        .sidebar-toggle:hover {
+            transform: translateX(-50%) scale(1.1);
+        }
+
+        body.sidebar-collapsed .sidebar-toggle {
+            left: 60px;
+        }
+
+        /* User profile section in sidebar */
+        .user-profile {
+            padding: 1rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+            margin-top: auto;
+        }
+
+        .user-profile-dropdown {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            color: var(--text-color);
+            transition: all var(--transition-speed) ease;
+            padding: 0.5rem;
+            border-radius: var(--border-radius);
+        }
+
+        .user-profile-dropdown:hover {
+            background-color: rgba(79, 70, 229, 0.1);
+        }
+
+        .user-profile .avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: rgba(79, 70, 229, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 0.75rem;
+            color: var(--primary-color);
+        }
+
+        .user-menu {
+            position: absolute;
+            bottom: 80px;
+            left: 20px;
+            width: calc(var(--sidebar-width) - 40px);
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transform-origin: bottom left;
+            transform: scale(0);
+            opacity: 0;
+            transition: all var(--transition-speed) ease;
+            z-index: 1032;
+        }
+
+        .user-menu.show {
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        .user-menu-item {
+            padding: 0.75rem 1rem;
+            display: flex;
+            align-items: center;
+            color: var(--text-color);
+            text-decoration: none;
+            transition: all var(--transition-speed) ease;
+        }
+
+        .user-menu-item:hover {
+            background-color: rgba(79, 70, 229, 0.1);
+            color: var(--primary-color);
+        }
+
+        .user-menu-item i {
+            margin-right: 0.75rem;
+            font-size: 1rem;
+        }
+
+        .user-menu-item.logout {
+            color: var(--danger-color);
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .user-menu-item.logout:hover {
+            background-color: rgba(239, 68, 68, 0.1);
+        }
+
+        /* Mobile view adjustments */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .content-wrapper {
+                margin-left: 0;
+                width: 100%;
+            }
+            
+            body.sidebar-visible .sidebar {
+                transform: translateX(0);
+            }
+            
+            .mobile-header {
+                display: flex !important;
+            }
+            
+            .sidebar-toggle {
+                left: 20px;
+                bottom: 20px;
+                transform: none;
+            }
+        }
+
+        .mobile-header {
+            display: none;
+            background-color: white;
+            padding: 1rem;
+            color: var(--text-color);
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Card styling */
         .card {
             border: none;
-            border-radius: 12px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            transition: all 0.3s ease;
+            border-radius: var(--border-radius);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.03);
+            transition: all var(--transition-speed) ease;
             background-color: var(--card-color);
             overflow: hidden;
         }
 
         .card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08);
         }
 
-        .add-card {
-            cursor: pointer;
-            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-            border: 2px dashed #ced4da;
-        }
-
-        .add-card:hover {
-            background: linear-gradient(135deg, #e9ecef, #dee2e6);
-        }
-
-        .add-card .bi {
-            color: var(--primary-color);
-        }
-
-        .card-title {
-            font-weight: 600;
-        }
-
-        .card-footer {
-            background-color: transparent;
-            border-top: 1px solid rgba(0, 0, 0, 0.05);
-        }
-
+        /* Button hover animation */
         .btn {
-            border-radius: 6px;
+            border-radius: var(--border-radius);
             font-weight: 500;
-            transition: all 0.3s ease;
+            transition: all var(--transition-speed) ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: -100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: all 0.5s ease;
+        }
+
+        .btn:hover::after {
+            left: 100%;
         }
 
         .btn-primary {
@@ -101,10 +322,10 @@
         }
 
         .btn-primary:hover {
-            background-color: #3457d5;
-            border-color: #3457d5;
+            background-color: var(--primary-hover);
+            border-color: var(--primary-hover);
             transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
         }
 
         .btn-danger {
@@ -113,33 +334,37 @@
         }
 
         .btn-danger:hover {
-            background-color: #e84118;
-            border-color: #e84118;
+            background-color: #DC2626;
+            border-color: #DC2626;
+            transform: translateY(-2px);
         }
 
+        /* Stats card animation */
+        .icon-bg {
+            transition: all var(--transition-speed) ease;
+        }
+
+        .card:hover .icon-bg {
+            transform: scale(1.1);
+            background-color: rgba(79, 70, 229, 0.1) !important;
+            color: var(--primary-color);
+        }
+
+        /* Badge styling */
         .badge {
             padding: 0.45em 0.6em;
             font-weight: 500;
+            border-radius: 6px;
         }
 
-        .container {
-            padding-top: 2rem;
-            padding-bottom: 2rem;
-        }
-
-        h1, h2, h3, h4, h5, h6 {
-            font-weight: 600;
-            color: #2d3748;
-        }
-
-        /* Modal styling - FIXED Z-INDEX ISSUES */
+        /* Modal styling */
         .modal-content {
             border: none;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border-radius: var(--border-radius);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
         }
 
-        /* Proper z-index for modal hierarchy */
         .modal {
             z-index: 1055;
         }
@@ -148,22 +373,20 @@
             z-index: 1050;
         }
         
-        /* Add a separate container for the blur effect that doesn't affect the modal */
         .blur-container {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 1040; /* Below modal backdrop */
-            pointer-events: none; /* Allow clicks to pass through */
-            transition: all 0.3s ease;
+            z-index: 1040;
+            pointer-events: none;
+            transition: all var(--transition-speed) ease;
         }
 
-        /* More minimal modal styling */
         .modal-header {
             border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-            padding: 1rem 1.5rem;
+            padding: 1.25rem 1.5rem;
             align-items: center;
         }
 
@@ -175,33 +398,34 @@
 
         .modal-header .modal-title i {
             font-size: 1rem;
-            margin-right: 0.5rem;
+            margin-right: 0.75rem;
+            color: var(--primary-color);
         }
 
         .modal-footer {
             border-top: 1px solid rgba(0, 0, 0, 0.05);
-            padding: 1rem 1.5rem;
+            padding: 1.25rem 1.5rem;
         }
 
+        /* Form styling */
         .form-control {
-            border-radius: 6px;
-            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            border: 1px solid #E5E7EB;
             padding: 0.6rem 1rem;
+            transition: all var(--transition-speed) ease;
         }
 
         .form-control:focus {
             border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(62, 100, 255, 0.15);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
         }
 
-        /* Custom styling for forms */
         .form-label {
             font-weight: 500;
             margin-bottom: 0.5rem;
-            color: #4a5568;
+            color: #4B5563;
         }
 
-        /* Improve form presentation in Django */
         form p {
             margin-bottom: 1rem;
         }
@@ -210,19 +434,20 @@
             display: block;
             font-weight: 500;
             margin-bottom: 0.5rem;
-            color: #4a5568;
+            color: #4B5563;
         }
 
         form p input, form p select, form p textarea {
             width: 100%;
-            border-radius: 6px;
-            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            border: 1px solid #E5E7EB;
             padding: 0.6rem 1rem;
+            transition: all var(--transition-speed) ease;
         }
 
         form p input:focus, form p select:focus, form p textarea:focus {
             border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(62, 100, 255, 0.15);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
             outline: none;
         }
 
@@ -233,95 +458,249 @@
             display: block;
         }
         
-        /* More compact buttons in modals */
-        .modal-footer .btn {
-            padding: 0.375rem 1rem;
+        /* Actions buttons in cards */
+        .card-actions {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            opacity: 0;
+            transition: all var(--transition-speed) ease;
+            display: flex;
+            gap: 5px;
         }
         
-        /* Standardized icon sizing */
-        .btn i {
-            font-size: 0.9rem;
+        .card:hover .card-actions {
+            opacity: 1;
+        }
+        
+        .btn-card-action {
+            width: 32px;
+            height: 32px;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-card-action:hover {
+            transform: translateY(-2px);
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+        
+        .fade-in-delay-1 {
+            animation: fadeIn 0.4s ease-out 0.1s forwards;
+            opacity: 0;
+        }
+        
+        .fade-in-delay-2 {
+            animation: fadeIn 0.4s ease-out 0.2s forwards;
+            opacity: 0;
+        }
+        
+        .fade-in-delay-3 {
+            animation: fadeIn 0.4s ease-out 0.3s forwards;
+            opacity: 0;
+        }
+        
+        /* Empty state styling */
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem;
+            background-color: rgba(79, 70, 229, 0.03);
+            border-radius: var(--border-radius);
+            border: 1px dashed #E5E7EB;
+            margin: 2rem 0;
+        }
+        
+        .empty-state-icon {
+            font-size: 3rem;
+            color: #D1D5DB;
+            margin-bottom: 1.5rem;
         }
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark">
-        <div class="container">
-            <a class="navbar-brand" href="{% url 'inventory:home' %}">
-                <i class="bi bi-box-seam me-2"></i>Inventory Management
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <a href="{% url 'inventory:home' %}" class="logo">
+                <i class="bi bi-box-seam me-2"></i>
+                <span class="logo-text">Inventory</span>
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    {% if user.is_authenticated %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'inventory:home' %}">
-                            <i class="bi bi-speedometer2 me-1"></i> Dashboard
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'accounts:logout' %}">
-                            <i class="bi bi-box-arrow-right me-1"></i> Logout
-                        </a>
-                    </li>
-                    {% else %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'accounts:login' %}">
-                            <i class="bi bi-box-arrow-in-right me-1"></i> Login
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'accounts:register' %}">
-                            <i class="bi bi-person-plus me-1"></i> Register
-                        </a>
-                    </li>
-                    {% endif %}
-                </ul>
+        </div>
+        
+        <div class="sidebar-nav">
+            {% if user.is_authenticated %}
+                <a href="{% url 'inventory:home' %}" class="nav-link {% if request.path == '/inventory/' %}active{% endif %}">
+                    <i class="bi bi-grid-3x3-gap"></i>
+                    <span class="nav-link-text">Inventory</span>
+                </a>
+            {% else %}
+                <a href="{% url 'accounts:login' %}" class="nav-link">
+                    <i class="bi bi-box-arrow-in-right"></i>
+                    <span class="nav-link-text">Login</span>
+                </a>
+                
+                <a href="{% url 'accounts:register' %}" class="nav-link">
+                    <i class="bi bi-person-plus"></i>
+                    <span class="nav-link-text">Register</span>
+                </a>
+            {% endif %}
+        </div>
+        
+        {% if user.is_authenticated %}
+        <div class="user-profile mt-auto">
+            <div class="user-profile-dropdown" id="userDropdown">
+                <div class="avatar">
+                    <i class="bi bi-person"></i>
+                </div>
+                <span class="username">{{ user.username }}</span>
+            </div>
+            
+            <div class="user-menu" id="userMenu">
+                <a href="#" class="user-menu-item">
+                    <i class="bi bi-person-circle"></i>
+                    Profile
+                </a>
+                <a href="{% url 'accounts:logout' %}" class="user-menu-item logout">
+                    <i class="bi bi-box-arrow-right"></i>
+                    Logout
+                </a>
             </div>
         </div>
-    </nav>
+        {% endif %}
+    </div>
+    
+    <!-- Mobile Header -->
+    <div class="mobile-header">
+        <div class="d-flex align-items-center">
+            <button class="btn btn-link text-dark p-0 me-3 mobile-sidebar-toggle">
+                <i class="bi bi-list" style="font-size: 1.5rem;"></i>
+            </button>
+            <span class="h5 mb-0">Inventory</span>
+        </div>
+        
+        {% if user.is_authenticated %}
+        <div class="dropdown">
+            <button class="btn btn-link text-dark p-0" type="button" id="mobileDropdownMenuButton" data-bs-toggle="dropdown">
+                <i class="bi bi-person-circle" style="font-size: 1.5rem;"></i>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="mobileDropdownMenuButton">
+                <li><a class="dropdown-item" href="#"><i class="bi bi-person me-2"></i>Profile</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="{% url 'accounts:logout' %}"><i class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
+            </ul>
+        </div>
+        {% endif %}
+    </div>
+    
+    <!-- Sidebar Toggle Button -->
+    <div class="sidebar-toggle">
+        <i class="bi bi-chevron-left"></i>
+    </div>
+    
+    <!-- Content Area -->
+    <div class="content-wrapper">
+        <!-- Add this div to hold the blur effect -->
+        <div id="blur-overlay" class="blur-container"></div>
 
-    <!-- Add this div to hold the blur effect -->
-    <div id="blur-overlay" class="blur-container"></div>
-
-    <main>
-        {% block content %}{% endblock %}
-    </main>
+        <main class="p-3 p-md-4">
+            {% block content %}{% endblock %}
+        </main>
+    </div>
 
     <!-- Bootstrap JS Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     
     <script>
-        // Completely revised blur effect approach
         document.addEventListener('DOMContentLoaded', function() {
             // Get all modals
             const modals = document.querySelectorAll('.modal');
-            const blurOverlay = document.getElementById('blur-overlay');
             
-            // Loop through all modals and set up event listeners
-            modals.forEach(modal => {
-                // When modal is about to show
-                modal.addEventListener('show.bs.modal', function() {
-                    // Create the blur effect by copying the main content's appearance
-                    const mainRect = document.querySelector('main').getBoundingClientRect();
-                    blurOverlay.style.top = mainRect.top + 'px';
-                    blurOverlay.style.left = mainRect.left + 'px';
-                    blurOverlay.style.width = mainRect.width + 'px';
-                    blurOverlay.style.height = mainRect.height + 'px';
-                    blurOverlay.style.backdropFilter = 'blur(4px)';
-                    blurOverlay.style.backgroundColor = 'rgba(0,0,0,0.1)';
-                    blurOverlay.style.position = 'fixed';
+            // Sidebar toggle functionality
+            const sidebarToggle = document.querySelector('.sidebar-toggle');
+            const mobileSidebarToggle = document.querySelector('.mobile-sidebar-toggle');
+            
+            // User dropdown functionality
+            const userDropdown = document.getElementById('userDropdown');
+            const userMenu = document.getElementById('userMenu');
+            
+            if (userDropdown && userMenu) {
+                userDropdown.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    userMenu.classList.toggle('show');
                 });
                 
-                // When modal is hidden
-                modal.addEventListener('hidden.bs.modal', function() {
-                    // Remove the blur effect
-                    blurOverlay.style.backdropFilter = 'none';
-                    blurOverlay.style.backgroundColor = 'transparent';
+                document.addEventListener('click', function(e) {
+                    if (!userMenu.contains(e.target) && !userDropdown.contains(e.target)) {
+                        userMenu.classList.remove('show');
+                    }
                 });
+            }
+            
+            // Desktop sidebar toggle
+            if (sidebarToggle) {
+                sidebarToggle.addEventListener('click', function() {
+                    document.body.classList.toggle('sidebar-collapsed');
+                    
+                    // Change icon direction
+                    const icon = sidebarToggle.querySelector('i');
+                    if (document.body.classList.contains('sidebar-collapsed')) {
+                        icon.classList.remove('bi-chevron-left');
+                        icon.classList.add('bi-chevron-right');
+                    } else {
+                        icon.classList.remove('bi-chevron-right');
+                        icon.classList.add('bi-chevron-left');
+                    }
+                });
+            }
+            
+            // Mobile sidebar toggle
+            if (mobileSidebarToggle) {
+                mobileSidebarToggle.addEventListener('click', function() {
+                    document.body.classList.toggle('sidebar-visible');
+                });
+            }
+            
+            // Handle resize events to switch between mobile and desktop view
+            function handleResize() {
+                if (window.innerWidth <= 768) {
+                    document.body.classList.remove('sidebar-collapsed');
+                    document.body.classList.remove('sidebar-visible');
+                }
+            }
+            
+            // Add staggered animation classes to cards
+            const cards = document.querySelectorAll('.card');
+            cards.forEach((card, index) => {
+                const delay = Math.min(index, 5); // Cap at 5 to avoid too much delay
+                card.classList.add(`fade-in-delay-${delay % 3 + 1}`);
             });
+            
+            // Initial call and event listener for resize
+            handleResize();
+            window.addEventListener('resize', handleResize);
+            
+            // Initialize tooltips if Bootstrap is loaded
+            if (typeof bootstrap !== 'undefined' && bootstrap.Tooltip) {
+                const tooltips = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+                tooltips.forEach(tooltip => new bootstrap.Tooltip(tooltip));
+            }
         });
     </script>
 </body>

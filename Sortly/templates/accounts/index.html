@@ -11,11 +11,11 @@
         :root {
             --primary: #3a86ff;
             --secondary: #8338ec;
-            --text: #2b2d42;
-            --light-text: #8d99ae;
-            --background: #f8f9fa;
-            --card: #ffffff;
-            --shadow: rgba(149, 157, 165, 0.1);
+            --text: #ffffff;
+            --light-text: rgba(255, 255, 255, 0.7);
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --glass-shadow: rgba(0, 0, 0, 0.1);
         }
         
         * {
@@ -26,13 +26,10 @@
         
         body {
             font-family: 'Poppins', sans-serif;
-            background: var(--background);
             color: var(--text);
             min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             overflow-x: hidden;
+            background: linear-gradient(135deg, #2b5876, #4e4376);
         }
         
         .container {
@@ -41,34 +38,59 @@
             padding: 2rem;
             position: relative;
             z-index: 10;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
         }
         
         .welcome-card {
-            background: var(--card);
-            border-radius: 16px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 24px;
             padding: 3rem;
-            box-shadow: 0 20px 60px var(--shadow);
+            box-shadow: 0 8px 32px var(--glass-shadow);
             text-align: center;
             position: relative;
             overflow: hidden;
+            border: 1px solid var(--glass-border);
             transform: translateY(0);
             transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            width: 100%;
+            max-width: 600px;
         }
         
         .welcome-card:hover {
             transform: translateY(-10px);
-            box-shadow: 0 30px 70px var(--shadow);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
+        
+        .glass-effect {
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(
+                circle at center,
+                rgba(255, 255, 255, 0.1) 0%,
+                rgba(255, 255, 255, 0.05) 20%,
+                rgba(255, 255, 255, 0) 70%
+            );
+            pointer-events: none;
         }
         
         .welcome-title {
             font-size: 2.5rem;
             font-weight: 600;
             margin-bottom: 1rem;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            background: linear-gradient(135deg, #ffffff, #e0e0ff);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             animation: fadeIn 0.8s ease forwards, slideDown 0.8s ease forwards;
             opacity: 0;
+            position: relative;
         }
         
         .welcome-subtitle {
@@ -78,6 +100,7 @@
             line-height: 1.6;
             animation: fadeIn 0.8s ease 0.2s forwards, slideDown 0.8s ease 0.2s forwards;
             opacity: 0;
+            position: relative;
         }
         
         .btn-container {
@@ -87,6 +110,7 @@
             margin-bottom: 2rem;
             opacity: 0;
             animation: fadeIn 0.8s ease 0.4s forwards, slideUp 0.8s ease 0.4s forwards;
+            position: relative;
         }
         
         .btn {
@@ -105,25 +129,28 @@
         }
         
         .btn-primary {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            background: rgba(58, 134, 255, 0.2);
             color: white;
-            border: none;
-            box-shadow: 0 5px 15px rgba(58, 134, 255, 0.3);
+            border: 1px solid rgba(58, 134, 255, 0.5);
+            box-shadow: 0 5px 15px rgba(58, 134, 255, 0.2);
+            backdrop-filter: blur(8px);
         }
         
         .btn-primary:hover {
-            box-shadow: 0 8px 25px rgba(58, 134, 255, 0.4);
+            background: rgba(58, 134, 255, 0.3);
+            box-shadow: 0 8px 25px rgba(58, 134, 255, 0.3);
             transform: translateY(-3px);
         }
         
         .btn-secondary {
-            background: transparent;
-            color: var(--primary);
-            border: 2px solid rgba(58, 134, 255, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(8px);
         }
         
         .btn-secondary:hover {
-            background: rgba(58, 134, 255, 0.05);
+            background: rgba(255, 255, 255, 0.2);
             transform: translateY(-3px);
         }
         
@@ -138,23 +165,27 @@
         
         .messages {
             margin-bottom: 2rem;
+            position: relative;
         }
         
         .message {
             padding: 0.8rem 1.5rem;
-            border-radius: 8px;
+            border-radius: 12px;
             margin-bottom: 1rem;
             font-size: 0.9rem;
+            backdrop-filter: blur(8px);
         }
         
         .success {
-            background-color: rgba(72, 187, 120, 0.1);
-            color: #38a169;
+            background-color: rgba(72, 187, 120, 0.2);
+            color: #c0ffdc;
+            border: 1px solid rgba(72, 187, 120, 0.3);
         }
         
         .error {
-            background-color: rgba(245, 101, 101, 0.1);
-            color: #e53e3e;
+            background-color: rgba(245, 101, 101, 0.2);
+            color: #ffc0c0;
+            border: 1px solid rgba(245, 101, 101, 0.3);
         }
         
         .footer {
@@ -163,6 +194,7 @@
             font-size: 0.9rem;
             opacity: 0;
             animation: fadeIn 0.8s ease 0.6s forwards;
+            position: relative;
         }
         
         /* Animated background */
@@ -176,21 +208,51 @@
             overflow: hidden;
         }
         
-        .bg-gradient {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, rgba(58, 134, 255, 0.1), rgba(131, 56, 236, 0.1));
-            opacity: 0.7;
-        }
-        
-        .particle {
+        .orb {
             position: absolute;
             border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            filter: blur(10px);
-            opacity: 0.3;
+            filter: blur(80px);
+            opacity: 0.5;
             animation: float 20s infinite alternate;
+        }
+        
+        .orb:nth-child(1) {
+            width: 400px;
+            height: 400px;
+            top: 10%;
+            left: 15%;
+            background: linear-gradient(135deg, #5d5dff, #3a86ff);
+            animation-duration: 25s;
+        }
+        
+        .orb:nth-child(2) {
+            width: 350px;
+            height: 350px;
+            bottom: 10%;
+            right: 15%;
+            background: linear-gradient(135deg, #8338ec, #ff006e);
+            animation-duration: 20s;
+            animation-delay: 5s;
+        }
+        
+        .orb:nth-child(3) {
+            width: 250px;
+            height: 250px;
+            bottom: 20%;
+            left: 25%;
+            background: linear-gradient(135deg, #3a86ff, #ff006e);
+            animation-duration: 18s;
+            animation-delay: 2s;
+        }
+        
+        .orb:nth-child(4) {
+            width: 200px;
+            height: 200px;
+            top: 20%;
+            right: 25%;
+            background: linear-gradient(135deg, #ff006e, #8338ec);
+            animation-duration: 22s;
+            animation-delay: 7s;
         }
         
         @keyframes fadeIn {
@@ -212,12 +274,6 @@
             0% { transform: translate(0, 0); }
             50% { transform: translate(30px, 30px); }
             100% { transform: translate(-30px, 15px); }
-        }
-        
-        @keyframes pulse {
-            0% { transform: scale(1); opacity: 0.8; }
-            50% { transform: scale(1.05); opacity: 0.5; }
-            100% { transform: scale(1); opacity: 0.8; }
         }
         
         @media (max-width: 768px) {
@@ -242,25 +298,30 @@
 </head>
 <body>
     <div class="bg-animation">
-        <div class="bg-gradient"></div>
+        <div class="orb"></div>
+        <div class="orb"></div>
+        <div class="orb"></div>
+        <div class="orb"></div>
     </div>
     
     <div class="container">
         <div class="welcome-card">
+            <div class="glass-effect"></div>
             <h1 class="welcome-title">Welcome to Sortly</h1>
             <p class="welcome-subtitle">Your personal inventory management system - simplified, organized, and efficient.</p>
             
-            {% if messages %}
             <div class="messages">
-                {% for message in messages %}
-                <div class="message {{ message.tags }}">{{ message }}</div>
-                {% endfor %}
+                <!-- Template placeholders preserved -->
+                {% if messages %}
+                    {% for message in messages %}
+                    <div class="message {{ message.tags }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
             </div>
-            {% endif %}
             
             <div class="btn-container">
                 <button class="btn btn-primary" onclick="window.location.href='{% url 'accounts:login' %}'">
-                    Sign In <i class="fas fa-arrow-right btn-icon"></i>
+                    Log In <i class="fas fa-arrow-right btn-icon"></i>
                 </button>
                 <button class="btn btn-secondary" onclick="window.location.href='{% url 'accounts:signup' %}'">
                     Create Account
@@ -274,52 +335,47 @@
     </div>
 
     <script>
-        // Create animated background particles
-        const bgAnimation = document.querySelector('.bg-animation');
-        
-        function createParticles() {
-            for (let i = 0; i < 15; i++) {
-                const particle = document.createElement('div');
-                particle.classList.add('particle');
-                
-                // Random size
-                const size = Math.random() * 120 + 50;
-                particle.style.width = `${size}px`;
-                particle.style.height = `${size}px`;
-                
-                // Random position
-                const posX = Math.random() * 100;
-                const posY = Math.random() * 100;
-                particle.style.left = `${posX}%`;
-                particle.style.top = `${posY}%`;
-                
-                // Random animation duration and delay
-                const duration = Math.random() * 20 + 15;
-                const delay = Math.random() * 10;
-                particle.style.animationDuration = `${duration}s`;
-                particle.style.animationDelay = `${delay}s`;
-                
-                // Add pulse animation
-                particle.style.animation = `float ${duration}s infinite alternate ease-in-out ${delay}s, pulse ${Math.random() * 5 + 5}s infinite ease-in-out ${Math.random() * 3}s`;
-                
-                bgAnimation.appendChild(particle);
-            }
-        }
-        
-        createParticles();
-        
-        // Parallax effect
+        // Mouse movement effect
         document.addEventListener('mousemove', (e) => {
-            const particles = document.querySelectorAll('.particle');
+            const card = document.querySelector('.welcome-card');
+            const glassEffect = document.querySelector('.glass-effect');
+            
+            // Get card position
+            const rect = card.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+            
+            // Calculate mouse position relative to card center
+            const mouseX = e.clientX - centerX;
+            const mouseY = e.clientY - centerY;
+            
+            // Move glass highlight effect
+            glassEffect.style.transform = `translate(${mouseX * 0.01}px, ${mouseY * 0.01}px)`;
+            
+            // Subtle tilt effect
+            const tiltX = (mouseY / rect.height) * 5;
+            const tiltY = -(mouseX / rect.width) * 5;
+            card.style.transform = `perspective(1000px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) translateY(-5px)`;
+        });
+        
+        // Reset tilt on mouse leave
+        document.querySelector('.welcome-card').addEventListener('mouseleave', () => {
+            const card = document.querySelector('.welcome-card');
+            card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateY(-5px)';
+        });
+        
+        // Orb parallax effect
+        document.addEventListener('mousemove', (e) => {
+            const orbs = document.querySelectorAll('.orb');
             const x = e.clientX / window.innerWidth;
             const y = e.clientY / window.innerHeight;
             
-            particles.forEach((particle, index) => {
-                const speed = (index % 5 + 1) * 0.01;
+            orbs.forEach((orb, index) => {
+                const speed = (index + 1) * 0.03;
                 const moveX = (x - 0.5) * speed * 100;
                 const moveY = (y - 0.5) * speed * 100;
                 
-                particle.style.transform = `translate(${moveX}px, ${moveY}px)`;
+                orb.style.transform = `translate(${moveX}px, ${moveY}px)`;
             });
         });
     </script>

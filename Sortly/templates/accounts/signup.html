@@ -4,18 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Account - Sortly</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
         
         :root {
             --primary: #3a86ff;
             --secondary: #8338ec;
-            --text: #2b2d42;
-            --light-text: #8d99ae;
-            --background: #f8f9fa;
-            --card: #ffffff;
-            --shadow: rgba(149, 157, 165, 0.1);
+            --text: #ffffff;
+            --light-text: rgba(255, 255, 255, 0.7);
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --glass-shadow: rgba(0, 0, 0, 0.1);
+            --input-bg: rgba(255, 255, 255, 0.05);
+            --input-border: rgba(255, 255, 255, 0.2);
         }
         
         * {
@@ -26,13 +28,13 @@
         
         body {
             font-family: 'Poppins', sans-serif;
-            background: var(--background);
             color: var(--text);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             overflow-x: hidden;
+            background: linear-gradient(135deg, #2b5876, #4e4376);
         }
         
         .container {
@@ -43,30 +45,57 @@
         }
         
         .container {
-            background: var(--card);
-            border-radius: 16px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 24px;
             padding: 2.5rem;
-            box-shadow: 0 20px 60px var(--shadow);
+            box-shadow: 0 8px 32px var(--glass-shadow);
             position: relative;
             overflow: hidden;
+            border: 1px solid var(--glass-border);
             transform: translateY(0);
             transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
         
         .container:hover {
             transform: translateY(-10px);
-            box-shadow: 0 30px 70px var(--shadow);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
+        
+        .glass-effect {
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(
+                circle at center,
+                rgba(255, 255, 255, 0.1) 0%,
+                rgba(255, 255, 255, 0.05) 20%,
+                rgba(255, 255, 255, 0) 70%
+            );
+            pointer-events: none;
         }
         
         h1 {
             text-align: center;
-            margin-bottom: 2rem;
+            margin-bottom: 0.5rem;
             font-size: 1.8rem;
             font-weight: 600;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            background: linear-gradient(135deg, #ffffff, #e0e0ff);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             animation: fadeIn 0.8s ease forwards, slideDown 0.8s ease forwards;
+            opacity: 0;
+        }
+        
+        .signup-subtitle {
+            text-align: center;
+            color: var(--light-text);
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+            animation: fadeIn 0.8s ease 0.2s forwards;
             opacity: 0;
         }
         
@@ -91,10 +120,10 @@
         
         .input-group input {
             width: 100%;
-            background: #f5f7fa;
-            border: 1px solid transparent;
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
             border-radius: 12px;
-            padding: 1rem 1rem 1rem 1rem;
+            padding: 1rem 1rem 1rem 3rem;
             font-size: 0.95rem;
             font-family: 'Poppins', sans-serif;
             color: var(--text);
@@ -103,14 +132,27 @@
         
         .input-group input:focus {
             outline: none;
-            border-color: rgba(58, 134, 255, 0.3);
-            box-shadow: 0 0 0 4px rgba(58, 134, 255, 0.1);
-            background: #ffffff;
+            border-color: rgba(58, 134, 255, 0.5);
+            box-shadow: 0 0 0 4px rgba(58, 134, 255, 0.2);
+        }
+        
+        .form-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--light-text);
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .input-group input:focus + .form-icon {
+            color: var(--primary);
         }
         
         .input-group label {
             position: absolute;
-            left: 1rem;
+            left: 3rem;
             top: 50%;
             transform: translateY(-50%);
             color: var(--light-text);
@@ -124,8 +166,8 @@
             top: 0.5rem;
             left: 1rem;
             font-size: 0.75rem;
-            color: var(--primary);
-            background: #ffffff;
+            color: #a0d2ff;
+            background: rgba(58, 134, 255, 0.1);
             padding: 0 0.5rem;
             border-radius: 4px;
         }
@@ -136,22 +178,24 @@
         
         button {
             width: 100%;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            background: rgba(58, 134, 255, 0.2);
             color: white;
-            border: none;
+            border: 1px solid rgba(58, 134, 255, 0.5);
             border-radius: 12px;
             padding: 1rem;
             font-weight: 500;
             font-size: 1rem;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(58, 134, 255, 0.3);
+            box-shadow: 0 5px 15px rgba(58, 134, 255, 0.2);
+            backdrop-filter: blur(8px);
             animation: fadeIn 0.8s ease 0.7s forwards, slideUp 0.8s ease 0.7s forwards;
             opacity: 0;
         }
         
         button:hover {
-            box-shadow: 0 8px 25px rgba(58, 134, 255, 0.4);
+            background: rgba(58, 134, 255, 0.3);
+            box-shadow: 0 8px 25px rgba(58, 134, 255, 0.3);
             transform: translateY(-3px);
         }
         
@@ -162,38 +206,44 @@
             font-size: 0.9rem;
             animation: fadeIn 0.8s ease 0.8s forwards;
             opacity: 0;
+            position: relative;
         }
         
         .signup-footer a {
-            color: var(--primary);
+            color: #a0d2ff;
             text-decoration: none;
             font-weight: 500;
             transition: all 0.3s ease;
         }
         
         .signup-footer a:hover {
-            color: var(--secondary);
+            color: #ffffff;
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
         }
         
         .messages {
             margin-bottom: 1.5rem;
+            position: relative;
         }
         
         .message {
             padding: 0.8rem 1.5rem;
-            border-radius: 8px;
+            border-radius: 12px;
             margin-bottom: 1rem;
             font-size: 0.9rem;
+            backdrop-filter: blur(8px);
         }
         
         .message.success {
-            background-color: rgba(72, 187, 120, 0.1);
-            color: #38a169;
+            background-color: rgba(72, 187, 120, 0.2);
+            color: #c0ffdc;
+            border: 1px solid rgba(72, 187, 120, 0.3);
         }
         
         .message.error {
-            background-color: rgba(245, 101, 101, 0.1);
-            color: #e53e3e;
+            background-color: rgba(245, 101, 101, 0.2);
+            color: #ffc0c0;
+            border: 1px solid rgba(245, 101, 101, 0.3);
         }
         
         /* Password strength indicator styling */
@@ -201,7 +251,7 @@
             height: 4px;
             margin-top: 0.5rem;
             border-radius: 2px;
-            background-color: #e5e7eb;
+            background-color: rgba(255, 255, 255, 0.1);
             overflow: hidden;
             animation: fadeIn 0.8s ease 0.6s forwards;
             opacity: 0;
@@ -233,21 +283,60 @@
             overflow: hidden;
         }
         
-        .bg-gradient {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, rgba(58, 134, 255, 0.1), rgba(131, 56, 236, 0.1));
-            opacity: 0.7;
-        }
-        
-        .particle {
+        .orb {
             position: absolute;
             border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            filter: blur(10px);
-            opacity: 0.3;
+            filter: blur(80px);
+            opacity: 0.5;
             animation: float 20s infinite alternate;
+        }
+        
+        .orb:nth-child(1) {
+            width: 400px;
+            height: 400px;
+            top: 10%;
+            left: 15%;
+            background: linear-gradient(135deg, #5d5dff, #3a86ff);
+            animation-duration: 25s;
+        }
+        
+        .orb:nth-child(2) {
+            width: 350px;
+            height: 350px;
+            bottom: 10%;
+            right: 15%;
+            background: linear-gradient(135deg, #8338ec, #ff006e);
+            animation-duration: 20s;
+            animation-delay: 5s;
+        }
+        
+        .orb:nth-child(3) {
+            width: 250px;
+            height: 250px;
+            bottom: 20%;
+            left: 25%;
+            background: linear-gradient(135deg, #3a86ff, #ff006e);
+            animation-duration: 18s;
+            animation-delay: 2s;
+        }
+        
+        .signup-progress {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 3px;
+            width: 100%;
+            background: transparent;
+            overflow: hidden;
+            visibility: hidden;
+            border-radius: 0 0 24px 24px;
+        }
+        
+        .signup-progress-bar {
+            height: 100%;
+            width: 0;
+            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--primary));
+            transition: width 1s ease;
         }
         
         @keyframes fadeIn {
@@ -271,25 +360,25 @@
             100% { transform: translate(-30px, 15px); }
         }
         
-        @keyframes pulse {
-            0% { transform: scale(1); opacity: 0.8; }
-            50% { transform: scale(1.05); opacity: 0.5; }
-            100% { transform: scale(1); opacity: 0.8; }
+        @media (max-width: 768px) {
+            .container {
+                padding: 2rem;
+            }
         }
     </style>
 </head>
 <body>
     <!-- Background animation -->
     <div class="bg-animation">
-        <div class="bg-gradient"></div>
-        <div class="particle" style="width:150px; height:150px; top:10%; left:10%;"></div>
-        <div class="particle" style="width:80px; height:80px; top:25%; left:80%;"></div>
-        <div class="particle" style="width:60px; height:60px; top:60%; left:30%;"></div>
-        <div class="particle" style="width:120px; height:120px; top:70%; left:70%;"></div>
+        <div class="orb"></div>
+        <div class="orb"></div>
+        <div class="orb"></div>
     </div>
 
     <div class="container">
+        <div class="glass-effect"></div>
         <h1>Create Your Account</h1>
+        <p class="signup-subtitle">Sign up to start organizing your inventory</p>
         
         {% if messages %}
         <div class="messages">
@@ -299,25 +388,29 @@
         </div>
         {% endif %}
         
-        <form method="post" action="{% url 'accounts:signup' %}">
+        <form id="signup-form" method="post" action="{% url 'accounts:signup' %}">
             {% csrf_token %}
             <div class="input-group">
                 <input type="text" id="name" name="name" placeholder=" " required>
+                <i class="fas fa-user form-icon"></i>
                 <label for="name">Full Name</label>
             </div>
             
             <div class="input-group">
                 <input type="text" id="username" name="username" placeholder=" " required>
+                <i class="fas fa-at form-icon"></i>
                 <label for="username">Username</label>
             </div>
             
             <div class="input-group">
                 <input type="email" id="email" name="email" placeholder=" " required>
+                <i class="fas fa-envelope form-icon"></i>
                 <label for="email">Email Address</label>
             </div>
             
             <div class="input-group">
                 <input type="password" id="password" name="password" placeholder=" " required>
+                <i class="fas fa-lock form-icon"></i>
                 <label for="password">Password</label>
                 <div class="password-strength">
                     <div class="password-strength-bar"></div>
@@ -331,6 +424,10 @@
                 <p>Already have an account? <a href="{% url 'accounts:login' %}">Sign In</a></p>
             </div>
         </form>
+        
+        <div class="signup-progress">
+            <div class="signup-progress-bar"></div>
+        </div>
     </div>
 
     <script>
@@ -369,8 +466,53 @@
             }
         });
         
+        // Mouse movement effect
+        document.addEventListener('mousemove', (e) => {
+            const card = document.querySelector('.container');
+            const glassEffect = document.querySelector('.glass-effect');
+            
+            // Get card position
+            const rect = card.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+            
+            // Calculate mouse position relative to card center
+            const mouseX = e.clientX - centerX;
+            const mouseY = e.clientY - centerY;
+            
+            // Move glass highlight effect
+            glassEffect.style.transform = `translate(${mouseX * 0.01}px, ${mouseY * 0.01}px)`;
+            
+            // Subtle tilt effect
+            const tiltX = (mouseY / rect.height) * 5;
+            const tiltY = -(mouseX / rect.width) * 5;
+            card.style.transform = `perspective(1000px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) translateY(-5px)`;
+        });
+        
+        // Reset tilt on mouse leave
+        document.querySelector('.container').addEventListener('mouseleave', () => {
+            const card = document.querySelector('.container');
+            card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateY(-5px)';
+        });
+        
+        // Orb parallax effect
+        document.addEventListener('mousemove', (e) => {
+            const orbs = document.querySelectorAll('.orb');
+            const x = e.clientX / window.innerWidth;
+            const y = e.clientY / window.innerHeight;
+            
+            orbs.forEach((orb, index) => {
+                const speed = (index + 1) * 0.03;
+                const moveX = (x - 0.5) * speed * 100;
+                const moveY = (y - 0.5) * speed * 100;
+                
+                orb.style.transform = `translate(${moveX}px, ${moveY}px)`;
+            });
+        });
+        
         // Form validation
-        const form = document.querySelector('form');
+        const form = document.getElementById('signup-form');
+        const progressBar = document.querySelector('.signup-progress-bar');
         
         form.addEventListener('submit', function(event) {
             const name = document.getElementById('name');
@@ -397,26 +539,11 @@
                 alert('Password must be at least 8 characters long.');
                 password.focus();
             }
-        });
-        
-        // Create particles
-        document.addEventListener('DOMContentLoaded', () => {
-            const bgAnimation = document.querySelector('.bg-animation');
             
-            // Create additional particles
-            for (let i = 0; i < 5; i++) {
-                const size = Math.random() * 100 + 20;
-                const particle = document.createElement('div');
-                particle.classList.add('particle');
-                particle.style.width = size + 'px';
-                particle.style.height = size + 'px';
-                particle.style.top = Math.random() * 100 + '%';
-                particle.style.left = Math.random() * 100 + '%';
-                particle.style.animationDuration = (Math.random() * 10 + 15) + 's';
-                particle.style.animationDelay = (Math.random() * 5) + 's';
-                
-                bgAnimation.appendChild(particle);
-            }
+            // Show progress bar
+            const progressElement = document.querySelector('.signup-progress');
+            progressElement.style.visibility = 'visible';
+            progressBar.style.width = '100%';
         });
     </script>
 </body>

@@ -11,11 +11,13 @@
         :root {
             --primary: #3a86ff;
             --secondary: #8338ec;
-            --text: #2b2d42;
-            --light-text: #8d99ae;
-            --background: #f8f9fa;
-            --card: #ffffff;
-            --shadow: rgba(149, 157, 165, 0.1);
+            --text: #ffffff;
+            --light-text: rgba(255, 255, 255, 0.7);
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --glass-shadow: rgba(0, 0, 0, 0.1);
+            --input-bg: rgba(255, 255, 255, 0.05);
+            --input-border: rgba(255, 255, 255, 0.2);
         }
         
         * {
@@ -26,13 +28,13 @@
         
         body {
             font-family: 'Poppins', sans-serif;
-            background: var(--background);
             color: var(--text);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             overflow-x: hidden;
+            background: linear-gradient(135deg, #2b5876, #4e4376);
         }
         
         .login-container {
@@ -43,31 +45,50 @@
         }
         
         .login-card {
-            background: var(--card);
-            border-radius: 16px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 24px;
             padding: 2.5rem;
-            box-shadow: 0 20px 60px var(--shadow);
+            box-shadow: 0 8px 32px var(--glass-shadow);
             position: relative;
             overflow: hidden;
+            border: 1px solid var(--glass-border);
             transform: translateY(0);
             transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
         
         .login-card:hover {
             transform: translateY(-10px);
-            box-shadow: 0 30px 70px var(--shadow);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
+        
+        .glass-effect {
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(
+                circle at center,
+                rgba(255, 255, 255, 0.1) 0%,
+                rgba(255, 255, 255, 0.05) 20%,
+                rgba(255, 255, 255, 0) 70%
+            );
+            pointer-events: none;
         }
         
         .login-header {
             text-align: center;
             margin-bottom: 2rem;
+            position: relative;
         }
         
         .login-title {
             font-size: 1.8rem;
             font-weight: 600;
             margin-bottom: 0.5rem;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            background: linear-gradient(135deg, #ffffff, #e0e0ff);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             animation: fadeIn 0.8s ease forwards, slideDown 0.8s ease forwards;
@@ -94,8 +115,8 @@
         
         .form-control {
             width: 100%;
-            background: #f5f7fa;
-            border: 1px solid transparent;
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
             border-radius: 12px;
             padding: 1rem 1rem 1rem 3rem;
             font-size: 0.95rem;
@@ -106,9 +127,8 @@
         
         .form-control:focus {
             outline: none;
-            border-color: rgba(58, 134, 255, 0.3);
-            box-shadow: 0 0 0 4px rgba(58, 134, 255, 0.1);
-            background: #ffffff;
+            border-color: rgba(58, 134, 255, 0.5);
+            box-shadow: 0 0 0 4px rgba(58, 134, 255, 0.2);
         }
         
         .form-icon {
@@ -141,8 +161,8 @@
             top: 0.5rem;
             left: 1rem;
             font-size: 0.75rem;
-            color: var(--primary);
-            background: #ffffff;
+            color: #a0d2ff;
+            background: rgba(58, 134, 255, 0.1);
             padding: 0 0.5rem;
             border-radius: 4px;
         }
@@ -153,22 +173,24 @@
         
         .btn-login {
             width: 100%;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            background: rgba(58, 134, 255, 0.2);
             color: white;
-            border: none;
+            border: 1px solid rgba(58, 134, 255, 0.5);
             border-radius: 12px;
             padding: 1rem;
             font-weight: 500;
             font-size: 1rem;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(58, 134, 255, 0.3);
+            box-shadow: 0 5px 15px rgba(58, 134, 255, 0.2);
+            backdrop-filter: blur(8px);
             animation: fadeIn 0.8s ease 0.5s forwards, slideUp 0.8s ease 0.5s forwards;
             opacity: 0;
         }
         
         .btn-login:hover {
-            box-shadow: 0 8px 25px rgba(58, 134, 255, 0.4);
+            background: rgba(58, 134, 255, 0.3);
+            box-shadow: 0 8px 25px rgba(58, 134, 255, 0.3);
             transform: translateY(-3px);
         }
         
@@ -179,38 +201,44 @@
             font-size: 0.9rem;
             animation: fadeIn 0.8s ease 0.6s forwards;
             opacity: 0;
+            position: relative;
         }
         
         .login-footer a {
-            color: var(--primary);
+            color: #a0d2ff;
             text-decoration: none;
             font-weight: 500;
             transition: all 0.3s ease;
         }
         
         .login-footer a:hover {
-            color: var(--secondary);
+            color: #ffffff;
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
         }
         
         .messages {
             margin-bottom: 1.5rem;
+            position: relative;
         }
         
         .message {
             padding: 0.8rem 1.5rem;
-            border-radius: 8px;
+            border-radius: 12px;
             margin-bottom: 1rem;
             font-size: 0.9rem;
+            backdrop-filter: blur(8px);
         }
         
         .success {
-            background-color: rgba(72, 187, 120, 0.1);
-            color: #38a169;
+            background-color: rgba(72, 187, 120, 0.2);
+            color: #c0ffdc;
+            border: 1px solid rgba(72, 187, 120, 0.3);
         }
         
         .error {
-            background-color: rgba(245, 101, 101, 0.1);
-            color: #e53e3e;
+            background-color: rgba(245, 101, 101, 0.2);
+            color: #ffc0c0;
+            border: 1px solid rgba(245, 101, 101, 0.3);
         }
         
         /* Animated background */
@@ -224,21 +252,90 @@
             overflow: hidden;
         }
         
-        .bg-gradient {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, rgba(58, 134, 255, 0.1), rgba(131, 56, 236, 0.1));
-            opacity: 0.7;
-        }
-        
-        .particle {
+        .orb {
             position: absolute;
             border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            filter: blur(10px);
-            opacity: 0.3;
+            filter: blur(80px);
+            opacity: 0.5;
             animation: float 20s infinite alternate;
+        }
+        
+        .orb:nth-child(1) {
+            width: 400px;
+            height: 400px;
+            top: 10%;
+            left: 15%;
+            background: linear-gradient(135deg, #5d5dff, #3a86ff);
+            animation-duration: 25s;
+        }
+        
+        .orb:nth-child(2) {
+            width: 350px;
+            height: 350px;
+            bottom: 10%;
+            right: 15%;
+            background: linear-gradient(135deg, #8338ec, #ff006e);
+            animation-duration: 20s;
+            animation-delay: 5s;
+        }
+        
+        .orb:nth-child(3) {
+            width: 250px;
+            height: 250px;
+            bottom: 20%;
+            left: 25%;
+            background: linear-gradient(135deg, #3a86ff, #ff006e);
+            animation-duration: 18s;
+            animation-delay: 2s;
+        }
+        
+        .login-progress {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 3px;
+            width: 100%;
+            background: transparent;
+            overflow: hidden;
+            visibility: hidden;
+            border-radius: 0 0 24px 24px;
+        }
+        
+        .login-progress-bar {
+            height: 100%;
+            width: 0;
+            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--primary));
+            transition: width 1s ease;
+        }
+        
+        .login-success {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transform: translateY(100%);
+            transition: transform 0.5s ease;
+            z-index: 100;
+            border-radius: 24px;
+        }
+        
+        .success-icon {
+            font-size: 3rem;
+            color: #48bb78;
+            margin-bottom: 1rem;
+        }
+        
+        .success-text {
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: var(--text);
         }
         
         @keyframes fadeIn {
@@ -262,66 +359,23 @@
             100% { transform: translate(-30px, 15px); }
         }
         
-        @keyframes pulse {
-            0% { transform: scale(1); opacity: 0.8; }
-            50% { transform: scale(1.05); opacity: 0.5; }
-            100% { transform: scale(1); opacity: 0.8; }
-        }
-        
-        .login-progress {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            height: 3px;
-            width: 100%;
-            background: transparent;
-            overflow: hidden;
-            visibility: hidden;
-        }
-        
-        .login-progress-bar {
-            height: 100%;
-            width: 0;
-            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--primary));
-            transition: width 1s ease;
-        }
-        
-        .login-success {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--card);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            transform: translateY(100%);
-            transition: transform 0.5s ease;
-            z-index: 100;
-        }
-        
-        .success-icon {
-            font-size: 3rem;
-            color: #48bb78;
-            margin-bottom: 1rem;
-        }
-        
-        .success-text {
-            font-size: 1.2rem;
-            font-weight: 500;
-            color: var(--text);
+        @media (max-width: 768px) {
+            .login-card {
+                padding: 2rem;
+            }
         }
     </style>
 </head>
 <body>
     <div class="bg-animation">
-        <div class="bg-gradient"></div>
+        <div class="orb"></div>
+        <div class="orb"></div>
+        <div class="orb"></div>
     </div>
     
     <div class="login-container">
         <div class="login-card">
+            <div class="glass-effect"></div>
             <div class="login-header">
                 <h1 class="login-title">Welcome Back</h1>
                 <p class="login-subtitle">Sign in to access your inventory</p>
@@ -359,7 +413,6 @@
                 </div>
             </form>
             
-            
             <div class="login-progress">
                 <div class="login-progress-bar"></div>
             </div>
@@ -371,7 +424,69 @@
         </div>
     </div>
 
-    
-    
+    <script>
+        // Mouse movement effect
+        document.addEventListener('mousemove', (e) => {
+            const card = document.querySelector('.login-card');
+            const glassEffect = document.querySelector('.glass-effect');
+            
+            // Get card position
+            const rect = card.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+            
+            // Calculate mouse position relative to card center
+            const mouseX = e.clientX - centerX;
+            const mouseY = e.clientY - centerY;
+            
+            // Move glass highlight effect
+            glassEffect.style.transform = `translate(${mouseX * 0.01}px, ${mouseY * 0.01}px)`;
+            
+            // Subtle tilt effect
+            const tiltX = (mouseY / rect.height) * 5;
+            const tiltY = -(mouseX / rect.width) * 5;
+            card.style.transform = `perspective(1000px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) translateY(-5px)`;
+        });
+        
+        // Reset tilt on mouse leave
+        document.querySelector('.login-card').addEventListener('mouseleave', () => {
+            const card = document.querySelector('.login-card');
+            card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateY(-5px)';
+        });
+        
+        // Orb parallax effect
+        document.addEventListener('mousemove', (e) => {
+            const orbs = document.querySelectorAll('.orb');
+            const x = e.clientX / window.innerWidth;
+            const y = e.clientY / window.innerHeight;
+            
+            orbs.forEach((orb, index) => {
+                const speed = (index + 1) * 0.03;
+                const moveX = (x - 0.5) * speed * 100;
+                const moveY = (y - 0.5) * speed * 100;
+                
+                orb.style.transform = `translate(${moveX}px, ${moveY}px)`;
+            });
+        });
+        
+        // Form submission animation
+        const form = document.getElementById('login-form');
+        const progressBar = document.querySelector('.login-progress-bar');
+        const loginSuccess = document.querySelector('.login-success');
+        
+        form.addEventListener('submit', function(e) {
+            // This is just visual feedback, remove this line in production
+            // e.preventDefault();
+            
+            const progressElement = document.querySelector('.login-progress');
+            progressElement.style.visibility = 'visible';
+            progressBar.style.width = '100%';
+            
+            // Simulate loading (remove in production)
+            // setTimeout(() => {
+            //     loginSuccess.style.transform = 'translateY(0)';
+            // }, 1000);
+        });
+    </script>
 </body>
 </html>
