@@ -77,22 +77,95 @@
         transform: scale(1.1) rotate(10deg);
         color: #6c757d;
     }
+
+    /* Improved back button styling */
+    .back-button {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.5rem 1rem;
+        margin-bottom: 1rem;
+        background: var(--glass-bg);
+        border: 1px solid var(--glass-border);
+        border-radius: 12px;
+        color: var(--text-color);
+        font-weight: 500;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+    }
+    
+    .back-button:hover {
+        background: rgba(255, 255, 255, 0.2);
+        transform: translateX(-5px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .back-button .bi {
+        margin-right: 0.5rem;
+        transition: transform 0.3s ease;
+    }
+    
+    .back-button:hover .bi {
+        transform: translateX(-3px);
+    }
+
+    /* Page header improvements */
+    .page-header {
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid var(--glass-border);
+    }
+    
+    .store-title {
+        font-size: 2rem;
+        font-weight: 600;
+        background: linear-gradient(135deg, #ffffff, #e0e0ff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-top: 0.5rem;
+    }
+    
+    #price, .price-display {
+        color: white;
+    }
+    
+    .btn-outline-primary,
+    .btn-outline-danger {
+        color: white !important;
+        border-color: rgba(255, 255, 255, 0.5) !important; /* optional: make borders soft white */
+    }
+
+    .btn-outline-primary:hover,
+    .btn-outline-danger:hover {
+        background-color: white !important;
+        color: black !important; /* or keep it colored if you want */
+    }
 </style>
 {% endblock %}
 
 <div class="container py-4 fade-in">
+    <div class="page-header slide-in-up">
+        <!-- Improved back button -->
+        <a href="{% url 'inventory:home' %}" class="back-button">
+            <i class="bi bi-arrow-left"></i> Back to Stores
+        </a>
+        <h1 class="store-title mt-3">{{ store.name }}</h1>
+    </div>
+    
     <div class="d-flex justify-content-between align-items-center mb-4 slide-in-up">
         <div>
-            <a href="{% url 'inventory:home' %}" class="text-decoration-none text-muted mb-2 d-inline-block">
-                <i class="bi bi-arrow-left me-1"></i> Back to Stores
-            </a>
-            <h1 class="mb-0">{{ store.name }}</h1>
+            <span class="badge bg-info">
+                <i class="bi bi-box-seam me-1"></i>
+                {{ products|length }} Products
+            </span>
         </div>
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addProductModal">
             <i class="bi bi-plus-lg me-1"></i> Add Product
         </button>
     </div>
     
+    {% if products %}
     <div class="row row-cols-1 row-cols-md-3 g-4">
         {% for product in products %}
         <div class="col slide-in-up" style="animation-delay: {{ forloop.counter0|divisibleby:3 }}00ms">
@@ -111,7 +184,8 @@
                 <div class="card-body">
                     <h5 class="card-title">{{ product.title }}</h5>
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <span class="fw-bold text-primary">${{ product.price }}</span>
+                        <span class="fw-bold price-display">${{ product.price }}</span>
+    
                         <span class="badge bg-{% if product.is_low_stock %}danger{% else %}success{% endif %} opacity-85">
                             <i class="bi bi-{% if product.is_low_stock %}exclamation-triangle{% else %}check-circle{% endif %} me-1"></i>
                             {{ product.quantity }} in stock
@@ -134,93 +208,100 @@
                 </div>
             </div>
         </div>
-        
-        <!-- Edit Product Modal -->
-        <div class="modal fade" id="editProductModal{{ product.id }}" tabindex="-1" aria-labelledby="editProductModalLabel{{ product.id }}" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="editProductModalLabel{{ product.id }}">
-                            <i class="bi bi-pencil-square"></i> Edit Product
-                        </h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <form method="post" action="{% url 'inventory:update_product' product.id %}" enctype="multipart/form-data">
-                        <div class="modal-body">
-                            {% csrf_token %}
-                            <div class="mb-3">
-                                <label for="title{{ product.id }}" class="form-label">Product Name</label>
-                                <input type="text" class="form-control" id="title{{ product.id }}" name="title" value="{{ product.title }}" required>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="price{{ product.id }}" class="form-label">Price ($)</label>
-                                    <input type="number" step="0.01" class="form-control" id="price{{ product.id }}" name="price" value="{{ product.price }}" required>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label for="quantity{{ product.id }}" class="form-label">Quantity</label>
-                                    <input type="number" class="form-control" id="quantity{{ product.id }}" name="quantity" value="{{ product.quantity }}" required>
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <label for="low_stock_quantity{{ product.id }}" class="form-label">Low Stock Threshold</label>
-                                <input type="number" class="form-control" id="low_stock_quantity{{ product.id }}" name="low_stock_quantity" value="{{ product.low_stock_quantity }}" required>
-                                <small class="form-text text-muted">Alert will appear when quantity falls below this value</small>
-                            </div>
-                            <div class="mb-3">
-                                <label for="image{{ product.id }}" class="form-label">Product Image</label>
-                                <input type="file" class="form-control" id="image{{ product.id }}" name="image">
-                                <small class="form-text text-muted">Leave empty to keep current image</small>
-                            </div>
-                            {% if product.image %}
-                            <div class="text-center mb-3">
-                                <small class="d-block mb-2 text-muted">Current Image:</small>
-                                <img src="{{ product.image.url }}" alt="{{ product.title }}" class="img-thumbnail" style="max-height: 120px;">
-                            </div>
-                            {% endif %}
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
-                                <i class="bi bi-x"></i> Cancel
-                            </button>
-                            <button type="submit" class="btn btn-primary">
-                                <i class="bi bi-check2"></i> Save Changes
-                            </button>
-                        </div>
-                    </form>
+        {% endfor %}
+    </div>
+    
+    {% comment %} Generate modals outside the grid to avoid flex layout issues {% endcomment %}
+    {% for product in products %}
+    <!-- Edit Product Modal -->
+    <div class="modal fade" id="editProductModal{{ product.id }}" tabindex="-1" aria-labelledby="editProductModalLabel{{ product.id }}" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editProductModalLabel{{ product.id }}">
+                        <i class="bi bi-pencil-square"></i> Edit Product
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-            </div>
-        </div>
-        
-        <!-- Delete Product Modal -->
-        <div class="modal fade" id="deleteProductModal{{ product.id }}" tabindex="-1" aria-labelledby="deleteProductModalLabel{{ product.id }}" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title text-danger" id="deleteProductModalLabel{{ product.id }}">
-                            <i class="bi bi-exclamation-triangle"></i> Delete Product
-                        </h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
+                <form method="post" action="{% url 'inventory:update_product' product.id %}" enctype="multipart/form-data">
                     <div class="modal-body">
-                        <p>Are you sure you want to delete <strong>{{ product.title }}</strong>?</p>
-                        <div class="alert alert-warning">
-                            <i class="bi bi-exclamation-circle me-1"></i>
-                            This action cannot be undone.
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="title{{ product.id }}" class="form-label">Product Name</label>
+                            <input type="text" class="form-control" id="title{{ product.id }}" name="title" value="{{ product.title }}" required>
                         </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="price{{ product.id }}" class="form-label">Price ($)</label>
+                                <input type="number" step="0.01" class="form-control" id="price{{ product.id }}" name="price" value="{{ product.price }}" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="quantity{{ product.id }}" class="form-label">Quantity</label>
+                                <input type="number" class="form-control" id="quantity{{ product.id }}" name="quantity" value="{{ product.quantity }}" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="low_stock_quantity{{ product.id }}" class="form-label">Low Stock Threshold</label>
+                            <input type="number" class="form-control" id="low_stock_quantity{{ product.id }}" name="low_stock_quantity" value="{{ product.low_stock_quantity }}" required>
+                            <small class="form-text text-muted">Alert will appear when quantity falls below this value</small>
+                        </div>
+                        <div class="mb-3">
+                            <label for="image{{ product.id }}" class="form-label">Product Image</label>
+                            <input type="file" class="form-control" id="image{{ product.id }}" name="image">
+                            <small class="form-text text-muted">Leave empty to keep current image</small>
+                        </div>
+                        {% if product.image %}
+                        <div class="text-center mb-3">
+                            <small class="d-block mb-2 text-muted">Current Image:</small>
+                            <img src="{{ product.image.url }}" alt="{{ product.title }}" class="img-thumbnail" style="max-height: 120px;">
+                        </div>
+                        {% endif %}
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
                             <i class="bi bi-x"></i> Cancel
                         </button>
-                        <a href="{% url 'inventory:delete_product' product.id %}" class="btn btn-danger">
-                            <i class="bi bi-trash"></i> Delete Product
-                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check2"></i> Save Changes
+                        </button>
                     </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Delete Product Modal -->
+    <div class="modal fade" id="deleteProductModal{{ product.id }}" tabindex="-1" aria-labelledby="deleteProductModalLabel{{ product.id }}" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-danger" id="deleteProductModalLabel{{ product.id }}">
+                        <i class="bi bi-exclamation-triangle"></i> Delete Product
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to delete <strong>{{ product.title }}</strong>?</p>
+                    <div class="alert alert-warning">
+                        <i class="bi bi-exclamation-circle me-1"></i>
+                        This action cannot be undone.
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                        <i class="bi bi-x"></i> Cancel
+                    </button>
+                    <a href="{% url 'inventory:delete_product' product.id %}" class="btn btn-danger">
+                        <i class="bi bi-trash"></i> Delete Product
+                    </a>
                 </div>
             </div>
         </div>
-        {% empty %}
+    </div>
+    {% endfor %}
+    
+    {% else %}
+    <div class="row">
         <div class="col-12 text-center py-5">
             <div class="py-4 empty-state-container">
                 <i class="bi bi-box empty-state-icon" style="font-size: 3rem; color: #d1d5db;"></i>
@@ -231,8 +312,8 @@
                 </button>
             </div>
         </div>
-        {% endfor %}
     </div>
+    {% endif %}
 </div>
 
 <!-- Add Product Modal -->
